@@ -1,3 +1,4 @@
+import chalk from 'chalk';
 import { TSVFileReader } from '../../shared/libs/file-reader/index.js';
 import { Command } from './command.interface.js';
 
@@ -10,7 +11,7 @@ export class ImportCommand implements Command {
     const [filename] = parameters;
 
     if (!filename) {
-      console.error('Укажите путь к TSV-файлу: --import <path>');
+      console.error(chalk.red('Укажите путь к TSV-файлу: --import <path>'));
       return;
     }
 
@@ -18,12 +19,14 @@ export class ImportCommand implements Command {
 
     try {
       fileReader.read();
-      console.info(fileReader.toArray());
+      const offers = fileReader.toArray();
+      console.info(chalk.green(`Импортировано предложений: ${offers.length}`));
+      console.info(offers);
     } catch (err: unknown) {
-      console.error(`Не удалось импортировать данные из файла ${filename}`);
+      console.error(chalk.red(`Не удалось импортировать данные из файла ${filename}`));
 
       if (err instanceof Error) {
-        console.error(err.message);
+        console.error(chalk.red(err.message));
       }
     }
   }
